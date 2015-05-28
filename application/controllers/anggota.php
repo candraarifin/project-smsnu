@@ -137,7 +137,7 @@ $config['use_page_numbers'] = TRUE;
     function pending(){
         $this->db->select('*');
         $this->db->from('inbox');
-        //$this->db->where('pending','true');
+        $this->db->where('pending','true');
         $this->db->like('TextDecoded', 'reg');
         $getinbox=$this->db->get();
         
