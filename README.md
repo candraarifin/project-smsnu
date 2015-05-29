@@ -1,3 +1,7 @@
+##Project SMSNU
+Project ini adalah project pengembangan Kalkun sebagai web-based SMS manegement untuk digunakan pada pendataan anggota atau warga nahdiyin (NU) di kabupaten bantul. 
+Pengembangan dilakukan dengan menambahkan fitur pendafataran melalui perintah sms, dengan menggunakan perintah dan kata kunci tertentu warga dapat mendaftarkan dirinya menjadi warga NU. 
+Aplikasi ini ditujukan bagi warga nahdiyin dalam lingkup kabupaten bantul. Dengan pendaftaran ini diharapkan pengurus organisasi dapat berkomunkasi aktif dengan warga melalui media sms
 ## Kalkun - Open Source Web-based SMS Management   
 Kalkun is open source web-based SMS (Short Message Service) management, it use gammu-smsd (part of gammu family) as SMS gateway engine to deliver and retrieve messages from your phone/modem. 
 
