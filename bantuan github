@@ -1,0 +1,16 @@
+touch README.md
+git init
+git add README.md
+git commit -m "first commit"
+git remote add origin https://github.com/username/Hello-World.git
+git push -u origin master
+
+Push  repository dari command
+
+git remote add origin https://github.com/usernam/Hello-World.git
+git push -u origin master
+
+cd direktori/ //Masuk ke direktori yang sudah di clone tadi
+git add nama file atau * //tanda bintang untuk beberapa file sekaligus
+git commit -m "first commit" //dalam tanda petik tulisan pesan
+git push //masukkan nama pengguna dan kata sandi

@@ -68,13 +68,15 @@ class Daemon extends Controller {
         //$this->$fungsi($inbox,$kunci->delimiter);
         break;
     case "HELP":
-        $this->bantuan($inbox);
+        $this->bantuan($inbox,$delimiter);
         //$this->$fungsi($inbox,$kunci->delimiter);
         break;
+    
     case "CHECKSERVER":
         $this->checkserver($inbox,$delimiter);
         //$this->$fungsi($inbox,$kunci->delimiter);
         break;
+
 
     default:
         $this->kalkun_default();
@@ -227,50 +229,25 @@ class Daemon extends Controller {
         
         if($jmlsegment < 13) {
          $pesanbalasan="Data pendaftaran anda belum lengkap";
-         
-         $this->quickresponse($inbox->SenderNumber,$pesanbalasan);
-         
-         
-         //jalankan fungsi update data pada tabel inbox
-         
-        
 
+         $databalasan=array(
+        'DestinationNumber'=> $inbox->SenderNumber,
+        'TextDecoded'=> $pesanbalasan);
+        
+         
+        $this->db->insert('outbox', $databalasan); 
 
          //update tabel inbox
         $updateinbox=array(
- 			'Processed'=>'true',       
             'pending'=>'true');
         
         $this->db->where('ID',$inbox->ID);
         $this->db->update('inbox',$updateinbox);
+        
+         
+        
         }
-        
-        elseif($this->checknomor($inbox->SenderNumber) >= 3 ) {
-        	$pesanbalasan="Nomor anda sudah terdaftar sebanyak 3 kali. Gunakan nomor lain untuk pendaftaran";
-            $this->quickresponse($inbox->SenderNumber,$pesanbalasan);
-            
-            $updateinbox=array(
- 			'Processed'=>'true');
-        
-        $this->db->where('ID',$inbox->ID);
-        $this->db->update('inbox',$updateinbox);
-			
-		}
-		elseif($this->checkktp($pecah[3]) > 0) {
-			$pesanbalasan="No KTP anda sudah terdaftar di dalam sistem kami";
-			
-            $this->quickresponse($inbox->SenderNumber,$pesanbalasan);
-            
-             $updateinbox=array(
- 			'Processed'=>'true');
-        
-        $this->db->where('ID',$inbox->ID);
-        $this->db->update('inbox',$updateinbox);
-		}
-
         else {
-        	
-        	
 
         $pecahtgl=  str_split($pecah[8],2);
         
@@ -327,14 +304,12 @@ class Daemon extends Controller {
         $this->db->insert('user_group', $grupkontak); 
         
         $pesanbalasan="Terimakasih. Anda telah terdaftar di PCNU Bantul, No Pokok anda adalah ".$nopokok." Nama ".$nama;
-        
-        $this->quickresponse($anggota->Number,$pesanbalasan);
     
-        //$databalasan=array(
-        //'DestinationNumber'=> $anggota->Number,
-        //'TextDecoded'=> $pesanbalasan);
+        $databalasan=array(
+        'DestinationNumber'=> $anggota->Number,
+        'TextDecoded'=> $pesanbalasan);
         
-        //$this->db->insert('outbox', $databalasan); 
+        $this->db->insert('outbox', $databalasan); 
         //$this->db->insert('pbk', $dataphonebook); 
 
         $this->db->delete('inbox', array('ID' => $inbox->ID));
@@ -352,10 +327,10 @@ class Daemon extends Controller {
     
     
        
-    function bantuan($inbox) {
+    function bantuan($inbox,$delimiter) {
         $pesanbalasan="cara pendaftaran : ketik reg*nama*identitas*no identitas*gender(l/p)*pendidikan*pekerjaan*tmp_lhr*tgl_lhr(ddmmyy)*alamat*kelurahan*kecamatan*kabupaten*email kirim ke 0822 4281 7000.";
         
-        $this->quickresponse($inbox->SenderNumber,$pesanbalasan);
+        if($this->quickresponse($inbox->SenderNumber,$pesanbalasan)){
         
 $update= array(
         'Processed' => 'true'
@@ -363,7 +338,11 @@ $update= array(
 
 $this->db->where('ID', $inbox->ID);
 $this->db->update('inbox', $update);  
+        }
+
         
+
+
 
     }
     
@@ -428,8 +407,7 @@ $this->db->update('inbox', $update);
     }
     
     
-    
-    
+   
     
     
     function quickresponse($tujuan,$isi){
@@ -467,10 +445,7 @@ if ($i == 1) {
          'Class' => '0'
              );
         
-       
-        
         $this->db->insert('outbox', $databalasan);
-      
     
 }
 else {
@@ -482,25 +457,16 @@ $databalasan=array(
          'ID' => $newID,
         'SequencePosition'=> $i
              );
-       
-			
-
+        
         $this->db->insert('outbox_multipart', $databalasan);
-      
 }
-
-//mysql_query($kirimpesan);
-
-
-
-
     }
         }
         else {
         // jika sms kurang dari 160 karakter
         $databalasan=array(
         'DestinationNumber'=> $tujuan,
-        'TextDecoded'=> $isi
+        'TextDecoded'=> $msg
              );
         
         $this->db->insert('outbox', $databalasan);    
@@ -511,30 +477,22 @@ $databalasan=array(
     function checknomor($nomortelepon) {
         // melakukan pemerikasaan nomor telepon pendaftar apakah sudah terdaftar atau belum
         // jika sudah terdaftar maka pendaftaran ditolak
-       
-        $newnomortelepon=str_replace('+62','0',$nomortelepon);
+        
+        $Number="+628121558382";
+ 
+        
+        $nomortelepon=str_replace('+62','0',$Number);
               
         
               
-        $this->db->where('Number',$newnomortelepon);
+        $this->db->where('Number',$nomortelepon);
         $jml=$this->db->get('pbk')->num_rows();
         
-        return $jml;
+        if($jml > 3) {
         
-          }
-    
-    function checkktp($noktp) {
-        // melakukan pemerikasaan nomor ktp pendaftar apakah sudah terdaftar atau belum
-        // jika sudah terdaftar maka pendaftaran ditolak
-       
-        //$newnomortelepon=str_replace('+62','0',$nomortelepon);
-              
-        
-              
-        $this->db->where('no_identitas',$noktp);
-        $jml=$this->db->get('pbk')->num_rows();
-        
-        return $jml;
+            $pesanbalasan="Nomor anda sudah terdaftar sebanyak 3 kali. Gunakan nomor lain untuk pendaftaran";
+            $nomortujuan=$nomortelepon;
+        }
         
           }
           
@@ -552,36 +510,28 @@ $databalasan=array(
      
      if($admin) {
          $jmlanggota=$this->db->get('pbk')->num_rows();
-         $pesanbalasan="Hai ".$admin->username.". Server dalam keadaan baik. Jumlah Anggota terdaftar saat ini ". $jmlanggota;
+         $pesanbalasan="Hai. ".$admin->username." Server OKE. Jumlah Anggota terdaftar saat ini". $jmlanggota;
          $tujuan=$newphonenumber;
+         
         
          $this->quickresponse($tujuan,$pesanbalasan);
-
-         $updateinbox=array(
-         'Processed' => 'true');
+         
          $this->db->where('ID',$inbox->ID);
-         $this->db->update('inbox', $updateinbox);
+         $this->db->update('inbox',array('Processed' => 'true'));
+         
      }
      else {
          $pesanbalasan="Anda tidak berhak melakukan pengecekan server";
          $tujuan=$newphonenumber;
          $this->quickresponse($tujuan,$pesanbalasan);
-         $updateinbox=array(
-         'Processed' => 'true');
-         $this->db->where('ID',$inbox->ID);
-         $this->db->update('inbox', $updateinbox);
-
-     } 
+     }
         
-    }        
-    
-    
-    
     
 
     
     
 
+}
 }
 
 /* End of file daemon.php */

@@ -1,0 +1,126 @@
+ //cari nama saja   
+         if($this->input->get('searchwhat')==1){  
+        $this->db->select('*');
+        $this->db->from('pbk');
+        
+        
+        $this->db->select('data_kecamatan.id_kec','data_kecamatan.kecamatan');
+        $this->db->select('data_kelurahan.id_kel','data_kelurahan.kelurahan');
+        
+        if($id_kec){
+        $this->db->where('pbk.id_kec', $id_kec);
+        }
+        $this->db->join('data_kecamatan', 'data_kecamatan.id_kec = pbk.id_kec ','left');
+        $this->db->join('data_kelurahan', 'data_kelurahan.id_kel = pbk.id_kel ','left');
+        
+        
+        $this->db->where('data_kecamatan.id_kec = pbk.id_kec');
+        $this->db->where('data_kelurahan.id_kel = pbk.id_kel');
+         
+
+        $this->db->order_by("Name", "asc");
+        if($keywords){
+        $this->db->like('Name', $keywords);
+        }
+        $data[anggotas]=$this->db->get()->result();
+         
+         
+         }
+         
+         //cari alamat saja
+         elseif ($this->input->get('searchwhat')==2) {
+          $this->db->select('*');
+        $this->db->from('pbk');
+        if($id_kec){
+        $this->db->where('pbk.id_kec', $id_kec);
+        }
+        
+        $this->db->join('data_kecamatan', 'data_kecamatan.id_kec = pbk.id_kec ','left');
+         
+        $this->db->where('data_kecamatan.id_kec = pbk.id_kec');
+         
+
+        $this->db->order_by("alamat", "asc");
+        if($keywords){
+        $this->db->like('alamat', $keywords);
+        }
+        $data[anggotas]=$this->db->get()->result();
+        
+         }
+         //cari kelurahan saja
+         elseif ($this->input->get('searchwhat')==3) {
+          $this->db->select('*');
+        $this->db->from('pbk');
+        if($id_kec){
+        $this->db->where('pbk.id_kec', $id_kec);
+        }
+        
+        $this->db->join('data_kecamatan', 'data_kecamatan.id_kec = pbk.id_kec ','left');
+         $this->db->where('data_kecamatan.id_kec = pbk.id_kec');
+
+        $this->db->order_by("namakelurahan", "asc");
+        if($keywords){
+        $this->db->like('namakelurahan', $keywords);
+        }
+        $data[anggotas]=$this->db->get()->result();
+             }
+         //cari kecamatan saja
+         elseif ($this->input->get('searchwhat')==4) {
+                   $this->db->select('*');
+        $this->db->from('pbk');
+        if($id_kec){
+        $this->db->where('pbk.id_kec', $id_kec);
+        }
+        
+        $this->db->join('data_kecamatan', 'data_kecamatan.id_kec = pbk.id_kec ','left');
+         $this->db->where('data_kecamatan.id_kec = pbk.id_kec');
+
+        $this->db->order_by("namakecamatan", "asc");
+        if($keywords){
+        $this->db->like('namakecamatan', $keywords);
+        }
+        $data[anggotas]=$this->db->get()->result();
+             }
+         //cari nomor telepon saja
+         elseif ($this->input->get('searchwhat')==5) {
+                   $this->db->select('*');
+        $this->db->from('pbk');
+        if($id_kec){
+        $this->db->where('pbk.id_kec', $id_kec);
+        }
+        $this->db->join('data_kecamatan', 'data_kecamatan.id_kec = pbk.id_kec ','left');
+         $this->db->where('data_kecamatan.id_kec = pbk.id_kec');
+
+        $this->db->order_by("Number", "asc");
+        if($keywords){
+        $this->db->like('number', $keywords);
+        }
+         
+        $data[anggotas]=$this->db->get()->result();
+        
+         }
+         //cari semua
+         else {
+        
+        $where=('Name LIKE "%'.$keywords.'%" OR alamat LIKE "%'.$keywords.'%" OR namakelurahan LIKE "%'.$keywords.'%" OR namakecamatan LIKE "%'.$keywords.'%" OR Number LIKE "+62%'.$keywords.'%" OR Number LIKE "%'.$keywords.'%"');
+        $this->db->select('*');
+        $this->db->from('pbk');
+        if($id_kec){
+$this->db->where('pbk.id_kec', $id_kec);
+        }
+        if($keywords){
+        $this->db->where($where);
+        }
+        
+        $this->db->join('data_kecamatan', 'data_kecamatan.id_kec = pbk.id_kec ','left');
+        $this->db->where('data_kecamatan.id_kec = pbk.id_kec');
+        
+
+        $this->db->order_by("Name", "asc");
+        
+
+         
+        $data[anggotas]=$this->db->get()->result();
+        //$data[anggotas]=$this->db->query('SELECT * FROM pbk WHERE Name LIKE "%'.$keywords.'%" OR alamat LIKE "%'.$keywords.'%" OR namakelurahan LIKE "%'.$keywords.'%" OR namakecamatan LIKE "%'.$keywords.'%" OR Number LIKE "+62%'.$keywords.'%" OR Number LIKE "%'.$keywords.'%" ')->result();
+
+         }

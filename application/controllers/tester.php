@@ -182,31 +182,6 @@ $databalasan=array(
     
     
     
-    function checkserver($inbox,$delimiter){
-        
-
-        
-        //$phonenumber=$inbox->SenderNumber;
-     $phonenumber="+6281804089914";
-     
-     $newphonenumber=str_replace('+62','0',$phonenumber);
-     
-     $this->db->where('phone_number',$newphonenumber);
-     $admin=$this->db->get('user')->row();
-     
-     if($admin) {
-         $jmlanggota=$this->db->get('pbk')->num_rows();
-         $pesanbalasan="Hai. ".$admin->username." Server OKE. Jumlah Anggota terdaftar saat ini". $jmlanggota;
-         $tujuan=$newphonenumber;
-         
-        
-         $this->quickresponse($tujuan,$pesanbalasan);
-     }
-     else {
-         $pesanbalasan="Anda tidak berhak melakukan pengecekan server";
-         $tujuan=$newphonenumber;
-         $this->quickresponse($tujuan,$pesanbalasan);
-     }
      
      
 
@@ -224,6 +199,7 @@ $databalasan=array(
     
         
     }
+}
 }
 
 
