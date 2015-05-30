@@ -74,7 +74,7 @@ class Search extends Controller {
          
          
         $data['anggotas']=$this->anggota_model->search($keywords,$nama,$alamat,$pendidikan,$pekerjaan,$kelurahan,$kecamatan,$telepon,$email,$id_kel,$id_kec);
-        
+        $data['count']=count($data['anggotas']);
       
         
      $this->load->view('main/anggota/anggota_head',$data);

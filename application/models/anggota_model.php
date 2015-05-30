@@ -105,43 +105,67 @@ class Anggota_model extends Model {
         if($id_kel){
         $this->db->where('pbk.id_kel',$id_kel);
         }
-        
-        if($nama){
-        if($keywords){
-        $this->db->or_like('Name', $keywords);
-        }
-        }
-        
-        if($alamat){
-        if($keywords){
-        $this->db->or_like('alamat', $keywords);
-        }
-        }
 
-        if($pendidikan){
-        if($keywords){
-        $this->db->or_like('pendidikan', $keywords);
-        }
-        }
 
+		if($nama){
+			if($keywords){
+        $where = "(Name LIKE '%$keywords%')";
+			$this->db->where($where);
+			//$this->db->or_where($where);
+			}
+		}
+		if($alamat){
+			if($keywords){
+        $where = "(alamat LIKE '%$keywords%')";
+			$this->db->where($where);
+			$this->db->or_where($where);
+			}
+		}
+		if($pendidikan){
+			if($keywords){
+        $where = "(pendidikan LIKE '%$keywords%')";
+			$this->db->where($where);
+			$this->db->or_where($where);
+			}
+		}
         if($pekerjaan){
-        if($keywords){
-        $this->db->or_like('pekerjaan', $keywords);
-        }
-        }
-
+			if($keywords){
+        $where = "(pekerjaan LIKE '%$keywords%')";
+			$this->db->where($where);
+			$this->db->or_where($where);
+			}
+		}
         if($kelurahan){
-        if($keywords){
-        $this->db->or_like('namakelurahan', $keywords);
-        }
-        }
+			if($keywords){
+        $where = "(namakelurahan LIKE '%$keywords%')";
+			$this->db->where($where);
+			$this->db->or_where($where);
+			}
+		}
+        if($kecamatan){
+			if($keywords){
+        $where = "(namakecamatan LIKE '%$keywords%')";
+			$this->db->where($where);
+			$this->db->or_where($where);
+			}
+		}
+    	if($telepon){
+			if($keywords){
+        $where = "(Number LIKE '%$keywords%')";
+			$this->db->where($where);
+			$this->db->or_where($where);
+			}
+		}
+		if($email){
+			if($keywords){
+        $where = "(email LIKE '%$keywords%')";
+			$this->db->where($where);
+			$this->db->or_where($where);
+			}
+		}
 
+    			
 
-
-        
-        
-        //$this->db->limit($limit);
-        //$this->db->order_by("Name", "asc");
         
         $query=$this->db->get();
         return $query->result();
